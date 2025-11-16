@@ -5,10 +5,6 @@
 
 #define cantidad 50
 
-/*void leerArchivo(const char *nombreArchivo) ;
-void sobrescribirArchivo(const char *nombreArchivo, const char *nuevoTexto) ;
-*/
-
 int main()
 {
     int opcion;
@@ -37,10 +33,10 @@ int main()
     case 3:
         printf("Ingrese el nombre de la muestra: ");
         fgets(texto, sizeof(texto), stdin);
-        texto[strcspn(texto, "\n")] = '\0';
+        texto[strcspn(texto, "\n")] = '\0'; //Quitar saltos de linea
         printf("Ingrese el nuevo nombre de la muestra: ");
         fgets(textoNuevo, sizeof(textoNuevo), stdin);
-        textoNuevo[strcspn(textoNuevo, "\n")] = '\0';
+        textoNuevo[strcspn(textoNuevo, "\n")] = '\0'; //Quitar saltos de linea
         cambiarMuestra(texto, textoNuevo);
         break;
 
@@ -56,4 +52,5 @@ int main()
 
     return 0;
 }
+
 
