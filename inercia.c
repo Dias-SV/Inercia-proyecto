@@ -12,6 +12,7 @@ void mostrar()
     int i = 0;
     int j = 0;
     datos datos[cantidad];
+
     FILE *archivo = fopen("curvas.csv", "r"); // Abriren modo lectura
     if (archivo == NULL)
     {
@@ -41,4 +42,42 @@ void mostrar()
     {
         printf("No se tienen muestras registradas");
     }
+
+    fclose(archivo);
+}
+
+void cambiarMuestra(const char *texto, const char *reemplazo)
+{   
+    char linea[1000];
+    char *campo;
+    int i = 0;
+    int j = 0;
+    datos datos[cantidad];
+
+    FILE *archivo = fopen("curvas.csv", "r"); // Abrir en modo agregar
+    FILE *temporal = fopen("temp.csv", "w");
+    if (archivo == NULL || temporal == NULL)
+    {
+        printf("No se pudo abrir el archivo para escribir.\n");
+        return;
+    }
+
+    while (fgets(linea, 1000, archivo) != NULL)
+    {
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        if (strcmp(datos[i].nombre, texto) == 0)
+        {
+            strcpy(datos[i].nombre, reemplazo);
+        }
+        fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
+        i++;
+    }
+    
+    fclose(archivo);
+    fclose(temporal);
+    
 }
