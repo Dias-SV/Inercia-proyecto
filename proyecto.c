@@ -5,12 +5,6 @@
 
 #define cantidad 50
 
-/*void leerArchivo(const char *nombreArchivo) ;
-void escribirArchivo(const char *nombreArchivo, const char *texto) ;
-void sobrescribirArchivo(const char *nombreArchivo, const char *nuevoTexto) ;
-*/
-
-
 int main()
 {
     
@@ -44,4 +38,5 @@ int main()
     }
     } while (opcion != 5);
 }
+
 
