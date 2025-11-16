@@ -46,6 +46,7 @@ void mostrar()
     fclose(archivo);
 }
 
+//Para esta funcion falta hacer otra de la inercia para ligarla
 void cambiarMuestra(const char *texto, const char *reemplazo)
 {   
     char linea[1000];
@@ -81,3 +82,4 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     fclose(temporal);
     
 }
+
