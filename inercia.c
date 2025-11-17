@@ -41,7 +41,8 @@ void mostrar()
     }
     else
     {
-        printf("No se tienen muestras registradas");
+        printf("No se tienen muestras registradas.\n");
+        printf("Para registrar nuevas muestras use la opcion 2.\n");
     }
 }
 
@@ -66,7 +67,8 @@ void nuevaMuestra(const char *texto, float inercia)
 
         if (strcmp(datos[i].nombre, texto) == 0)
         {
-            printf("La muestra %s ya esta registrada, si decea cambiarla use la opcion 3\n", texto);
+            printf("La muestra %s ya esta registrada.\n", texto);
+            printf("Para cambiar muestras use la opcion 3.\n");
             fclose(archivo);
             return;
         }
@@ -74,14 +76,14 @@ void nuevaMuestra(const char *texto, float inercia)
         i++;
     }
 
-    fprintf(archivo, "%s,%f", texto, inercia);
+    fprintf(archivo, "%s,%f\n", texto, inercia);
     fclose(archivo);
 
 }
 
 void cambiarMuestra(const char *texto, const char *reemplazo)
 {   
-    int i = 0;
+    int i = 0, r = 0;
     base datos[Cantidad];
 
     FILE *archivo = fopen("curvas.csv", "r");
@@ -104,6 +106,7 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
         if (strcmp(datos[i].nombre, texto) == 0)
         {
             strcpy(datos[i].nombre, reemplazo);
+            r = 1;
         }
         fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
         i++;
@@ -111,14 +114,18 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     
     fclose(archivo);
     fclose(temporal);
-
+    if(r == 0)
+    {
+        printf("No se encontro ninguna muestra con este nombre.\n");
+        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
+    }
     remove("curvas.csv");
     rename("temp.csv", "curvas.csv");
 }
 
 void borrarMuestra(const char *texto)
 {   
-    int i = 0;
+    int i = 0, r = 0;
     base datos[Cantidad];
 
     FILE *archivo = fopen("curvas.csv", "r");
@@ -142,12 +149,22 @@ void borrarMuestra(const char *texto)
         {
             fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
         }
+        else
+        {
+            r=1;
+        }
         
         i++;
     }
-    
+
     fclose(archivo);
     fclose(temporal);
+
+    if(r == 0)
+    {
+        printf("No se encontro ninguna muestra con este nombre.\n");
+        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
+    }
 
     remove("curvas.csv");
     rename("temp.csv", "curvas.csv");
