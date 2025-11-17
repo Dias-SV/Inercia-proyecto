@@ -89,6 +89,8 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     if (archivo == NULL || temporal == NULL)
     {
         printf("No se pudo abrir el archivo para escribir.\n");
+        fclose(temporal);
+        remove("temp.csv");
         return;
     }
 
@@ -114,5 +116,40 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     rename("temp.csv", "curvas.csv");
 }
 
+void borrarMuestra(const char *texto)
+{   
+    int i = 0;
+    base datos[Cantidad];
 
+    FILE *archivo = fopen("curvas.csv", "r");
+    FILE *temporal = fopen("temp.csv", "w");
+    if (archivo == NULL || temporal == NULL)
+    {
+        printf("No se pudo abrir el archivo para escribir.\n");
+        fclose(temporal);
+        remove("temp.csv");
+        return;
+    }
+
+    while (fgets(linea, Maximo, archivo) != NULL)
+    {
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        if (strcmp(datos[i].nombre, texto) == 1)
+        {
+            fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
+        }
+        
+        i++;
+    }
+    
+    fclose(archivo);
+    fclose(temporal);
+
+    remove("curvas.csv");
+    rename("temp.csv", "curvas.csv");
+}
 

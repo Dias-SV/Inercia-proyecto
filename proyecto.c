@@ -35,7 +35,7 @@ int main()
         break;
 
     case 2:
-        printf("Ingrese el nombre de la muestra: ");
+        printf("Ingrese el nombre de la muestra nueva: ");
         fgets(texto, sizeof(texto), stdin);
         texto[strcspn(texto, "\n")] = '\0';
         //Aqui va el procedimiento de la inercia
@@ -50,6 +50,13 @@ int main()
         fgets(textoNuevo, sizeof(textoNuevo), stdin);
         textoNuevo[strcspn(textoNuevo, "\n")] = '\0';
         cambiarMuestra(texto, textoNuevo);
+        break;
+    
+    case 4:
+        printf("Ingrese el nombre de la muestra a borrar: ");
+        fgets(texto, sizeof(texto), stdin);
+        texto[strcspn(texto, "\n")] = '\0';
+        borrarMuestra(texto);
         break;
 
     case 5:
