@@ -3,24 +3,25 @@
 #include <string.h>
 #include "inercia.h"
 
-#define cantidad 50
-char linea[1000];
+#define Maximo 1000
+#define Cantidad 50
+char linea[Maximo];
 char *campo;
-int i = 0;
 
 void mostrar()
 {   
+    int i = 0;
     int j = 0;
-    base datos[cantidad];
+    base datos[Cantidad];
 
-    FILE *archivo = fopen("curvas.csv", "r"); // Abriren modo lectura
+    FILE *archivo = fopen("curvas.csv", "r");
     if (archivo == NULL)
     {
         printf("No se pudo abrir el archivo para lectura.\n");
         return;
     }
 
-    while (fgets(linea, 1000, archivo) != NULL)
+    while (fgets(linea, Maximo, archivo) != NULL)
     {
         campo = strtok(linea, ",");
         strcpy(datos[i].nombre, campo);
@@ -48,13 +49,10 @@ void mostrar()
 
 void cambiarMuestra(const char *texto, const char *reemplazo)
 {   
-    char linea[1000];
-    char *campo;
     int i = 0;
-    int j = 0;
-    base datos[cantidad];
+    base datos[Cantidad];
 
-    FILE *archivo = fopen("curvas.csv", "r"); // Abrir en modo agregar
+    FILE *archivo = fopen("curvas.csv", "r");
     FILE *temporal = fopen("temp.csv", "w");
     if (archivo == NULL || temporal == NULL)
     {
@@ -62,7 +60,7 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
         return;
     }
 
-    while (fgets(linea, 1000, archivo) != NULL)
+    while (fgets(linea, Maximo, archivo) != NULL)
     {
         campo = strtok(linea, ",");
         strcpy(datos[i].nombre, campo);
