@@ -33,6 +33,14 @@ int main()
     case 1:
         mostrar();
         break;
+
+    case 2:
+        printf("Ingrese el nombre de la muestra: ");
+        fgets(texto, sizeof(texto), stdin);
+        texto[strcspn(texto, "\n")] = '\0';
+        //Aqui va el procedimiento de la inercia
+        nuevaMuestra(texto, 0.0);
+        break;
         
     case 3:
         printf("Ingrese el nombre de la muestra: ");

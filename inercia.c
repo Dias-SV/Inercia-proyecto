@@ -43,8 +43,40 @@ void mostrar()
     {
         printf("No se tienen muestras registradas");
     }
+}
 
+void nuevaMuestra(const char *texto, float inercia)
+{   
+    int i = 0;
+    base datos[Cantidad];
+
+    FILE *archivo = fopen("curvas.csv", "a+");
+    if (archivo == NULL)
+    {
+        printf("No se pudo abrir el archivo para escribir.\n");
+        return;
+    }
+
+    while (fgets(linea, Maximo, archivo) != NULL)
+    {
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        if (strcmp(datos[i].nombre, texto) == 0)
+        {
+            printf("La muestra %s ya esta registrada, si decea cambiarla use la opcion 3\n", texto);
+            fclose(archivo);
+            return;
+        }
+        
+        i++;
+    }
+
+    fprintf(archivo, "%s,%f", texto, inercia);
     fclose(archivo);
+
 }
 
 void cambiarMuestra(const char *texto, const char *reemplazo)
@@ -81,3 +113,6 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     remove("curvas.csv");
     rename("temp.csv", "curvas.csv");
 }
+
+
+

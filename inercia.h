@@ -5,9 +5,10 @@ typedef struct
 {
     char nombre[50];
     float inercia;
-}datos;
+}base;
 
 void mostrar();
+void nuevaMuestra(const char *texto, float inercia);
 void cambiarMuestra(const char *texto, const char *reemplazo);
 
 
