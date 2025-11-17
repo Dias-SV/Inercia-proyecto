@@ -10,6 +10,7 @@ typedef struct
 void mostrar();
 void nuevaMuestra(const char *texto, float inercia);
 void cambiarMuestra(const char *texto, const char *reemplazo);
+void borrarMuestra(const char *texto);
 
 
 #endif
