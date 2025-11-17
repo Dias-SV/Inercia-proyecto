@@ -3,23 +3,25 @@
 #include <string.h>
 #include "inercia.h"
 
-#define cantidad 50
+#define Maximo 1000
+#define Cantidad 50
+char linea[Maximo];
+char *campo;
 
 void mostrar()
 {   
-    char linea[1000];
-    char *campo;
     int i = 0;
     int j = 0;
-    datos datos[cantidad];
-    FILE *archivo = fopen("curvas.csv", "r"); // Abriren modo lectura
+    base datos[Cantidad];
+
+    FILE *archivo = fopen("curvas.csv", "r");
     if (archivo == NULL)
     {
         printf("No se pudo abrir el archivo para lectura.\n");
         return;
     }
 
-    while (fgets(linea, 1000, archivo) != NULL)
+    while (fgets(linea, Maximo, archivo) != NULL)
     {
         campo = strtok(linea, ",");
         strcpy(datos[i].nombre, campo);
@@ -41,4 +43,41 @@ void mostrar()
     {
         printf("No se tienen muestras registradas");
     }
+
+    fclose(archivo);
+}
+
+void cambiarMuestra(const char *texto, const char *reemplazo)
+{   
+    int i = 0;
+    base datos[Cantidad];
+
+    FILE *archivo = fopen("curvas.csv", "r");
+    FILE *temporal = fopen("temp.csv", "w");
+    if (archivo == NULL || temporal == NULL)
+    {
+        printf("No se pudo abrir el archivo para escribir.\n");
+        return;
+    }
+
+    while (fgets(linea, Maximo, archivo) != NULL)
+    {
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        if (strcmp(datos[i].nombre, texto) == 0)
+        {
+            strcpy(datos[i].nombre, reemplazo);
+        }
+        fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
+        i++;
+    }
+    
+    fclose(archivo);
+    fclose(temporal);
+
+    remove("curvas.csv");
+    rename("temp.csv", "curvas.csv");
 }

@@ -8,5 +8,7 @@ typedef struct
 }datos;
 
 void mostrar();
+void cambiarMuestra(const char *texto, const char *reemplazo);
+
 
 #endif
