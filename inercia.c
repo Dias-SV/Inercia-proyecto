@@ -4,14 +4,14 @@
 #include "inercia.h"
 
 #define cantidad 50
+char linea[1000];
+char *campo;
+int i = 0;
 
 void mostrar()
 {   
-    char linea[1000];
-    char *campo;
-    int i = 0;
     int j = 0;
-    datos datos[cantidad];
+    base datos[cantidad];
 
     FILE *archivo = fopen("curvas.csv", "r"); // Abriren modo lectura
     if (archivo == NULL)
@@ -46,14 +46,13 @@ void mostrar()
     fclose(archivo);
 }
 
-//Para esta funcion falta hacer otra de la inercia para ligarla
 void cambiarMuestra(const char *texto, const char *reemplazo)
 {   
     char linea[1000];
     char *campo;
     int i = 0;
     int j = 0;
-    datos datos[cantidad];
+    base datos[cantidad];
 
     FILE *archivo = fopen("curvas.csv", "r"); // Abrir en modo agregar
     FILE *temporal = fopen("temp.csv", "w");
@@ -80,6 +79,7 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     
     fclose(archivo);
     fclose(temporal);
-    
-}
 
+    remove("curvas.csv");
+    rename("temp.csv", "curvas.csv");
+}
