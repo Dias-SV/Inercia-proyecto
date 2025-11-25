@@ -7,3 +7,5 @@ Si se quiere poner un nombre poner -o nombreDelPrograma
 Correrlo desde el mismo directorio con ./nombreDelPrograma
 
 Si no se le puso un nombre el default es "a" por lo que se pondria ./a
+
+No es necesario descragar el archivo csv porque solo fue de pruebas. Si no se descarga primero hacer uso de la segundo opcion
