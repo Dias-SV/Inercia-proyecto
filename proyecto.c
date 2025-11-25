@@ -31,31 +31,50 @@ int main()
         break;
 
     case 2:
-        printf("Si quiere cancelar presione 1\n");
-        printf("Si quiere seguir presione otro numero\n");
-        scanf("%d", &opcionE);
-        getchar();
-        if (opcionE != 1) //Usada para cancelar o seguir
+        do
         {
-            printf("Ingrese el nombre de la nueva muestra: ");
-            fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
-            texto[strcspn(texto, "\n")] = '\0'; //Quita salto de linea
-            valor = datos();//Hace el calculo de la inercia
-            nuevaMuestra(texto, valor);
-        }
+            opcionE=-1; //Para que al leer caracteres no haya errores
+            printf("Si quiere cancelar presione 1\n");
+            printf("Si quiere seguir presione 0\n");
+            scanf("%d", &opcionE);
+            getchar();
+            //Submenu de eleccion
+            switch (opcionE) //Usada para cancelar o seguir
+            {
+            case 0:
+                printf("Ingrese el nombre de la nueva muestra: ");
+                fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
+                texto[strcspn(texto, "\n")] = '\0'; //Quita salto de linea
+                valor = datos();//Hace el calculo de la inercia
+                nuevaMuestra(texto, valor);
+                opcionE = 1;
+                break;
+        
+            case 1:
+                printf("Cerrando submenu.\n");
+                break;
+        
+            default:
+                printf("Opcion invalida.\n\n");
+                break;
+            }
+        } while (opcionE != 1);
         break;
         
     case 3:
-        printf("\nQue quiere cambiar: \n");
-        printf("1. Nombre\n");
-        printf("2. Inercia\n");
-        printf("3. Ambos\n");
-        printf("4. Cancelar\n");
-        scanf("%d", &opcionE);
-        getchar();
-        //Submenu de escritura
-        switch (opcionE)
+        do
         {
+            opcionE=-1;
+            printf("\nQue quiere cambiar: \n");
+            printf("1. Nombre\n");
+            printf("2. Inercia\n");
+            printf("3. Ambos\n");
+            printf("4. Cancelar\n");
+            scanf("%d", &opcionE);
+            getchar();
+            //Submenu de eleccion
+            switch (opcionE)
+            {
             case 1:
                 printf("Ingrese el nombre de la muestra: \n");
                 fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
@@ -93,22 +112,35 @@ int main()
             default:
                 printf("Opcion invalida.\n");
                 break;
-        }
+            }
+        } while (opcionE != 4);
         break;
     
     case 4:
-        printf("Si quiere cancelar presione 1\n");
-        printf("Si quiere seguir presione otro numero\n");
-        scanf("%d", &opcionE);
-        getchar();
-        printf("%d", opcionE);
-        if (opcionE != 1) //Usada para cancelar o seguir
+        do
         {
-            printf("Ingrese el nombre de la muestra a borrar: ");
-            fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
-            texto[strcspn(texto, "\n")] = '\0'; //Quita salto de lines
-            borrarMuestra(texto);
-        }
+            printf("Si quiere cancelar presione 1\n");
+            printf("Si quiere seguir presione 0\n");
+            scanf("%d", &opcionE);
+            getchar();
+            //Submenu de eleccion
+            switch (opcionE) //Usada para cancelar o seguir
+            {
+            case 0: 
+                printf("Ingrese el nombre de la muestra a borrar: ");
+                fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
+                texto[strcspn(texto, "\n")] = '\0'; //Quita salto de lines
+                borrarMuestra(texto);
+            
+            case 1:
+                printf("Cerrando submenu.\n");
+                break;
+            
+            default:
+                printf("\nOpcion invalida.\n");
+                break;
+            }
+            } while (opcionE != 1);
         break;
 
     case 5:
