@@ -31,7 +31,7 @@ int main()
         break;
 
     case 2:
-        do
+        do //Usado para que el submenu no se cancele al entrar en opcion invalida
         {
             opcionE=-1; //Para que al leer caracteres no haya errores
             printf("Si quiere cancelar presione 1\n");
@@ -47,7 +47,7 @@ int main()
                 texto[strcspn(texto, "\n")] = '\0'; //Quita salto de linea
                 valor = datos();//Hace el calculo de la inercia
                 nuevaMuestra(texto, valor);
-                opcionE = 1;
+                opcionE = 1; //Para no volver al loop
                 break;
         
             case 1:
@@ -62,7 +62,7 @@ int main()
         break;
         
     case 3:
-        do
+        do //Usado para que el submenu no se cancele al entrar en opcion invalida
         {
             opcionE=-1;
             printf("\nQue quiere cambiar: \n");
@@ -83,6 +83,7 @@ int main()
                 fgets(textoNuevo, sizeof(textoNuevo), stdin);//Obtiene el texto escrito
                 textoNuevo[strcspn(textoNuevo, "\n")] = '\0'; //Quita salto de linea
                 cambiarMuestra(texto, textoNuevo);
+                opcionE=4; //Para no volver al loop
                 break;
 
             case 2:
@@ -91,6 +92,7 @@ int main()
                 texto[strcspn(texto, "\n")] = '\0'; //Quita salto de linea
                 valor = datos();//Hace el calculo de la inercia
                 cambiarInercia(texto, valor);
+                opcionE=4; //Para no volver al loop
                 break;
 
             case 3:
@@ -103,6 +105,7 @@ int main()
                 valor = datos();//Hace el calculo de la inercia
                 cambiarMuestra(texto, textoNuevo);
                 cambiarInercia(textoNuevo, valor);
+                opcionE=4; //Para no volver al loop
                 break;
 
             case 4:
@@ -117,7 +120,7 @@ int main()
         break;
     
     case 4:
-        do
+        do //Usado para que el submenu no se cancele al entrar en opcion invalida
         {
             printf("Si quiere cancelar presione 1\n");
             printf("Si quiere seguir presione 0\n");
@@ -131,6 +134,8 @@ int main()
                 fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
                 texto[strcspn(texto, "\n")] = '\0'; //Quita salto de lines
                 borrarMuestra(texto);
+                opcionE=1; //Para no volver al loop
+                break;
             
             case 1:
                 printf("Cerrando submenu.\n");
