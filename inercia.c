@@ -1,172 +1,22 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <math.h>
 #include "inercia.h"
 
-#define Maximo 1000
-#define Cantidad 50
-char linea[Maximo];
-char *campo;
+float calibracion(float calor)
+{
+    float tempI = 0.0, tempF=0.0, tiempo = 0, masa=0, energia=0, watts=0;
+    printf("\nSe permiten hasta 6 decimales\n");
+    printf("Ingrese el valor de la masa (kg): ");
+    scanf("%f", &masa);
+    printf("Ingrese el valor de temperatura inicial (K): ");
+    scanf("%f", &tempI);
+    printf("Ingrese el valor de temperatura final (K): ");
+    scanf("%f", &tempF);
+    printf("Ingrese el tiempo transcurrido (s): ");
+    scanf("%f", &tiempo);
 
-void mostrar()
-{   
-    int i = 0;
-    int j = 0;
-    base datos[Cantidad];
-
-    FILE *archivo = fopen("curvas.csv", "r");
-    if (archivo == NULL)
-    {
-        printf("No se pudo abrir el archivo para lectura.\n");
-        return;
-    }
-
-    while (fgets(linea, Maximo, archivo) != NULL)
-    {
-        campo = strtok(linea, ",");
-        strcpy(datos[i].nombre, campo);
-        campo = strtok(NULL, ",");
-        datos[i].inercia = atof(campo);
-        i++;
-    }
+    energia = masa*calor*(tempF-tempI);
+    watts = energia/tiempo;
     
-    fclose(archivo);
-
-    if(i != 0)
-    {
-        for (j = 0; j < i; j++)
-        {
-            printf("%d. %s, Inercia: %f\n", j+1, datos[j].nombre, datos[j].inercia);
-        }
-    }
-    else
-    {
-        printf("No se tienen muestras registradas.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
-    }
+    return watts;
 }
-
-void nuevaMuestra(const char *texto, float inercia)
-{   
-    int i = 0;
-    base datos[Cantidad];
-
-    FILE *archivo = fopen("curvas.csv", "a+");
-    if (archivo == NULL)
-    {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        return;
-    }
-
-    while (fgets(linea, Maximo, archivo) != NULL)
-    {
-        campo = strtok(linea, ",");
-        strcpy(datos[i].nombre, campo);
-        campo = strtok(NULL, ",");
-        datos[i].inercia = atof(campo);
-
-        if (strcmp(datos[i].nombre, texto) == 0)
-        {
-            printf("La muestra %s ya esta registrada.\n", texto);
-            printf("Para cambiar muestras use la opcion 3.\n");
-            fclose(archivo);
-            return;
-        }
-        
-        i++;
-    }
-
-    fprintf(archivo, "%s,%f\n", texto, inercia);
-    fclose(archivo);
-
-}
-
-void cambiarMuestra(const char *texto, const char *reemplazo)
-{   
-    int i = 0, r = 0;
-    base datos[Cantidad];
-
-    FILE *archivo = fopen("curvas.csv", "r");
-    FILE *temporal = fopen("temp.csv", "w");
-    if (archivo == NULL || temporal == NULL)
-    {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        fclose(temporal);
-        remove("temp.csv");
-        return;
-    }
-
-    while (fgets(linea, Maximo, archivo) != NULL)
-    {
-        campo = strtok(linea, ",");
-        strcpy(datos[i].nombre, campo);
-        campo = strtok(NULL, ",");
-        datos[i].inercia = atof(campo);
-
-        if (strcmp(datos[i].nombre, texto) == 0)
-        {
-            strcpy(datos[i].nombre, reemplazo);
-            r = 1;
-        }
-        fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
-        i++;
-    }
-    
-    fclose(archivo);
-    fclose(temporal);
-    if(r == 0)
-    {
-        printf("No se encontro ninguna muestra con este nombre.\n");
-        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
-    }
-    remove("curvas.csv");
-    rename("temp.csv", "curvas.csv");
-}
-
-void borrarMuestra(const char *texto)
-{   
-    int i = 0, r = 0;
-    base datos[Cantidad];
-
-    FILE *archivo = fopen("curvas.csv", "r");
-    FILE *temporal = fopen("temp.csv", "w");
-    if (archivo == NULL || temporal == NULL)
-    {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        fclose(temporal);
-        remove("temp.csv");
-        return;
-    }
-
-    while (fgets(linea, Maximo, archivo) != NULL)
-    {
-        campo = strtok(linea, ",");
-        strcpy(datos[i].nombre, campo);
-        campo = strtok(NULL, ",");
-        datos[i].inercia = atof(campo);
-
-        if (strcmp(datos[i].nombre, texto) == 1)
-        {
-            fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
-        }
-        else
-        {
-            r=1;
-        }
-        
-        i++;
-    }
-
-    fclose(archivo);
-    fclose(temporal);
-
-    if(r == 0)
-    {
-        printf("No se encontro ninguna muestra con este nombre.\n");
-        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
-    }
-
-    remove("curvas.csv");
-    rename("temp.csv", "curvas.csv");
-}
-
