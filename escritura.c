@@ -19,7 +19,8 @@ void mostrar()
     FILE *archivo = fopen("curvas.csv", "r"); //Abrir en modo lectura
     if (archivo == NULL)
     {
-        printf("No se pudo abrir el archivo para lectura.\n");
+        printf("\nNo se pudo abrir el archivo para lectura.\n");
+        printf("Para registrar nuevas muestras use la opcion 2.\n");
         return;
     }
 
@@ -38,9 +39,10 @@ void mostrar()
     ///Muestra en pantalla
     if(i != 0) //Verifica que se hayan encontrado muestras
     {
+        printf("Muestras:\n");
         for (j = 0; j < i; j++)
         {
-            printf("%d. %s, Inercia: %f\n", j+1, datos[j].nombre, datos[j].inercia);
+            printf("%d. Nombre: %s, Inercia: %f\n", j+1, datos[j].nombre, datos[j].inercia);
         }
     }
     else
@@ -49,6 +51,7 @@ void mostrar()
         printf("Para registrar nuevas muestras use la opcion 2.\n");
     }
 }
+
 
 //Ingresar una nueva muestra
 void nuevaMuestra(const char *texto, float inercia)
@@ -75,7 +78,7 @@ void nuevaMuestra(const char *texto, float inercia)
         //Verificacion de que la muestra no este registrada
         if (strcmp(datos[i].nombre, texto) == 0)
         {
-            printf("La muestra %s ya esta registrada.\n", texto);
+            printf("\n------El nombre %s ya esta registrado.------\n", texto);
             printf("Para cambiar muestras use la opcion 3.\n");
             fclose(archivo);
             return; //Si esta registrada termina
@@ -86,7 +89,7 @@ void nuevaMuestra(const char *texto, float inercia)
         }
         i++;
     }
-    fprintf(archivo, "%s,%f\n", texto, inercia);//Escritura al archivo de los datos
+    fprintf(archivo, "\n%s,%f", texto, inercia);//Escritura al archivo de los datos
     fclose(archivo);
     //Mostrar que se hizo
     if(r == 1)
@@ -95,10 +98,11 @@ void nuevaMuestra(const char *texto, float inercia)
     }
 }
 
+
 //Cambia nombre a una muestra ya registrada
-void cambiarMuestra(const char *texto, const char *reemplazo)
+void cambiarMuestra(int numero, const char *reemplazo)
 {   
-    int i = 0, r = 0;
+    int i = 0, r = 0, j=0;
     base datos[Cantidad];
 
     FILE *archivo = fopen("curvas.csv", "r");//Abrir archivo principal en modo lectura
@@ -106,11 +110,13 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
     if (archivo == NULL || temporal == NULL)
     {
         printf("No se pudo abrir el archivo para escribir.\n");
+        printf("Para registrar nuevas muestras use la opcion 2.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
     }
 
+    //Validacion de que se puede poner la muestra
     while (fgets(linea, Maximo, archivo) != NULL)
     {
         //Lectura del campo nombre
@@ -121,32 +127,49 @@ void cambiarMuestra(const char *texto, const char *reemplazo)
         datos[i].inercia = atof(campo);
 
         //Busqueda del nombre de la muestra ingresado
-        if (strcmp(datos[i].nombre, texto) == 0)
+        if (strcmp(datos[i].nombre, reemplazo) == 0)
         {
-            strcpy(datos[i].nombre, reemplazo); //Si se encuentra cambia el nombre original al reemplazo
-            r = 1;
+            fclose(archivo);
+            fclose(temporal);
+            remove("temp.csv"); //Se quita el archivo temporal 
+            printf("\n------El nombre %s ya esta registrado.------\n", reemplazo);
+            printf("Para consultar las muestras registradas usa la opcion 1.\n");
+            return;
+        }
+        i++;
+    }
+    
+    rewind(archivo); //Regresa para volver a leer el archivo
+    i=0;
+    while (fgets(linea, Maximo, archivo) != NULL)
+    {
+        //Lectura del campo nombre
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        //Lectura del campo inercia
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        //Busqueda del numero de la muestra ingresado
+        if (i == (numero-1))
+        {
+            strcpy(datos[i].nombre, reemplazo); //Si se encuentra el nombre de muestra se reemplaza
         }
         fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
         i++;
     }
+    
     fclose(archivo);
     fclose(temporal);
     remove("curvas.csv");
     rename("temp.csv", "curvas.csv"); //El archivo temporal se vuelve el nuevo archivo principal
-    //Mostrar que se hizo
-    if(r == 0)
-    {
-        printf("No se encontro ninguna muestra con este nombre.\n");
-        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
-    }
-    else
-    {
-        printf("Nombre cambiado con exito.\n");
-    }
+
+    printf("Nombre cambiado con exito.\n");
 }
 
+
 //Cambia valor de inercia a una muestra ya registrada
-void cambiarInercia(const char *texto, float reemplazo)
+void cambiarInercia(int numero, float reemplazo)
 {   
     int i = 0, r = 0;
     base datos[Cantidad];
@@ -156,11 +179,12 @@ void cambiarInercia(const char *texto, float reemplazo)
     if (archivo == NULL || temporal == NULL)
     {
         printf("No se pudo abrir el archivo para escribir.\n");
+        printf("Para registrar nuevas muestras use la opcion 2.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
     }
-
+    
     while (fgets(linea, Maximo, archivo) != NULL)
     {
         //Lectura del campo nombre
@@ -171,9 +195,9 @@ void cambiarInercia(const char *texto, float reemplazo)
         datos[i].inercia = atof(campo);
 
         //Busqueda del nombre de la muestra ingresado
-        if (strcmp(datos[i].nombre, texto) == 0)
+        if (i == (numero-1))
         {
-            datos[i].inercia = reemplazo; //Si se encuentra cambia el valor de inercia
+            datos[i].inercia = reemplazo; //Si se encuentra numero de muestra se reemplaza
             r = 1;
         }
         fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
@@ -187,7 +211,7 @@ void cambiarInercia(const char *texto, float reemplazo)
     //Mostrar que se hizo
     if(r == 0)
     {
-        printf("No se encontro ninguna muestra con este nombre.\n");
+        printf("No hay una muestra con este numero.\n");
         printf("Para consultar las muestras disponibles usa la opcion 1.\n");
     }
     else
@@ -196,7 +220,8 @@ void cambiarInercia(const char *texto, float reemplazo)
     }
 }
 
-void borrarMuestra(const char *texto)
+
+void borrarMuestra(int numero)
 {   
     int i = 0, r = 0;
     base datos[Cantidad];
@@ -206,6 +231,7 @@ void borrarMuestra(const char *texto)
     if (archivo == NULL || temporal == NULL)
     {
         printf("No se pudo abrir el archivo para escribir.\n");
+        printf("Para registrar nuevas muestras use la opcion 2.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
@@ -221,7 +247,7 @@ void borrarMuestra(const char *texto)
         datos[i].inercia = atof(campo);
 
          //Busqueda del nombre de la muestra ingresado
-        if (strcmp(datos[i].nombre, texto) != 0)
+        if (i != (numero-1))
         {
             fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].inercia);
             //Si en la iteracion no se encuentra se escriben los demas datos al archivo temporal
@@ -247,6 +273,47 @@ void borrarMuestra(const char *texto)
     else
     {
         printf("Muestra borrada con exito.\n");
+    }
+}
+
+
+void buscarMuestra(const char *texto)    
+{   
+    int i = 0, r = 0;
+    base datos[Cantidad];
+
+    FILE *archivo = fopen("curvas.csv", "r");//Abrir archivo principal en modo lectura
+    if (archivo == NULL)
+    {
+        printf("No se pudo abrir el archivo.\n");
+        return;
+    }
+
+    while (fgets(linea, Maximo, archivo) != NULL)
+    {
+        //Lectura del campo nombre
+        campo = strtok(linea, ",");
+        strcpy(datos[i].nombre, campo);
+        //Lectura del campo inercia
+        campo = strtok(NULL, ",");
+        datos[i].inercia = atof(campo);
+
+        //Busqueda del nombre de la muestra ingresado
+        if (strcmp(datos[i].nombre, texto) == 0)
+        {
+            printf("\nMuestra:\n");
+            printf("%d. Nombre: %s, Inercia: %f\n", i+1, datos[i].nombre, datos[i].inercia);
+            r = 1;
+        }
+
+        i++;
+    }
+    fclose(archivo);
+    //Mostrar que se hizo
+    if(r == 0)
+    {
+        printf("No se encontro ninguna muestra con este nombre.\n");
+        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
     }
 }
 
