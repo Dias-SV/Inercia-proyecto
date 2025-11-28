@@ -3,7 +3,7 @@
 #include <string.h>
 #include "escritura.h"
 
-#define Maximo 1000 //Cantidad de lineas maximas
+#define Maximo 1000 
 #define Cantidad 200 //Cantidad de datos maximos
 //Variables usadas en todos los prcoedimientos
 char linea[Maximo];
@@ -19,8 +19,8 @@ void mostrar()
     FILE *archivo = fopen("curvas.csv", "r"); //Abrir en modo lectura
     if (archivo == NULL)
     {
-        printf("\nNo se pudo abrir el archivo para lectura.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
+        printf("\nNo se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario\n");
         return;
     }
 
@@ -42,13 +42,13 @@ void mostrar()
         printf("Muestras:\n");
         for (j = 0; j < i; j++)
         {
-            printf("%d. Nombre: %s, Calor Especifico: %f\n", j+1, datos[j].nombre, datos[j].calorE);
+            printf("%d. Nombre: %s.  Calor Especifico: %f\n", j+1, datos[j].nombre, datos[j].calorE);
         }
     }
     else
     {
         printf("No se tienen muestras registradas.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
+        printf("Para registrar nuevas muestras use la opcion 3.\n");
     }
 }
 
@@ -62,8 +62,13 @@ void nuevaMuestra(const char *texto, float calorE)
     FILE *archivo = fopen("curvas.csv", "a+"); //Abrir en modo agregar y lee al principio del archivo
     if (archivo == NULL)
     {
-        printf("No se pudo abrir el archivo para escribir.\n");
+        printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         return;
+    }
+    else
+    {
+        r=-1;
     }
     
     while (fgets(linea, Maximo, archivo) != NULL)
@@ -79,8 +84,9 @@ void nuevaMuestra(const char *texto, float calorE)
         if (strcmp(datos[i].nombre, texto) == 0)
         {
             printf("\n------El nombre %s ya esta registrado.------\n", texto);
-            printf("Para cambiar muestras use la opcion 3.\n");
+            printf("Para cambiar muestras use la opcion 4.\n");
             fclose(archivo);
+            r = 0;
             return; //Si esta registrada termina
         }
         else
@@ -89,11 +95,16 @@ void nuevaMuestra(const char *texto, float calorE)
         }
         i++;
     }
-    fprintf(archivo, "\n%s,%f", texto, calorE); //Escritura al archivo de los datos
+    fprintf(archivo, "%s,%f\n", texto, calorE); //Escritura al archivo de los datos
     fclose(archivo);
     //Mostrar que se hizo
     if(r == 1)
     {
+        printf("\nMuestra agregada con exito.\n");
+    }
+    else if (r == -1)
+    {
+        printf("\nArchivo csv creado con exito.\n");
         printf("Muestra agregada con exito.\n");
     }
 }
@@ -109,8 +120,8 @@ void cambiarMuestra(int numero, const char *reemplazo)
     FILE *temporal = fopen("temp.csv", "w");//Crea y abrir archivo temporal en modo escritura
     if (archivo == NULL || temporal == NULL)
     {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
+        printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
@@ -168,58 +179,6 @@ void cambiarMuestra(int numero, const char *reemplazo)
 }
 
 
-//Cambia valor de inercia a una muestra ya registrada
-void cambiarInercia(int numero, float reemplazo)
-{   
-    int i = 0, r = 0;
-    base datos[Cantidad];
-
-    FILE *archivo = fopen("curvas.csv", "r");//Abrir archivo principal en modo lectura
-    FILE *temporal = fopen("temp.csv", "w");//Crea y abir archivo temporal en modo escritura
-    if (archivo == NULL || temporal == NULL)
-    {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
-        fclose(temporal);
-        remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
-        return;
-    }
-    
-    while (fgets(linea, Maximo, archivo) != NULL)
-    {
-        //Lectura del campo nombre
-        campo = strtok(linea, ",");
-        strcpy(datos[i].nombre, campo);
-        //Lectura del campo calor
-        campo = strtok(NULL, ",");
-        datos[i].calorE = atof(campo);
-
-        //Busqueda del nombre de la muestra ingresado
-        if (i == (numero-1))
-        {
-            datos[i].calorE = reemplazo; //Si se encuentra numero de muestra se reemplaza
-            r = 1; //Usado para ver si se llevo el proceso con exito
-        }
-        fprintf(temporal, "%s,%f\n", datos[i].nombre, datos[i].calorE);
-        i++;
-    }
-    
-    fclose(archivo);
-    fclose(temporal);
-    remove("curvas.csv");
-    rename("temp.csv", "curvas.csv"); //El archivo temporal se vuelve el nuevo archivo principal
-    //Mostrar que se hizo
-    if(r == 0)
-    {
-        printf("No hay una muestra con este numero.\n");
-        printf("Para consultar las muestras disponibles usa la opcion 1.\n");
-    }
-    else
-    {
-        printf("Inercia cambiada con exito.\n");
-    }
-}
-
 //Cambiar calor especifico a una muestra registrada
 void cambiarCalor(int numero, float reemplazo)
 {   
@@ -230,8 +189,8 @@ void cambiarCalor(int numero, float reemplazo)
     FILE *temporal = fopen("temp.csv", "w");//Crea y abir archivo temporal en modo escritura
     if (archivo == NULL || temporal == NULL)
     {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
+        printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
@@ -268,7 +227,7 @@ void cambiarCalor(int numero, float reemplazo)
     }
     else
     {
-        printf("Inercia cambiada con exito.\n");
+        printf("Calor especifico cambiado con exito.\n");
     }
 }
 
@@ -281,8 +240,8 @@ void borrarMuestra(int numero)
     FILE *temporal = fopen("temp.csv", "w"); //Crea y abrir archivo temporal en modo escritura
     if (archivo == NULL || temporal == NULL)
     {
-        printf("No se pudo abrir el archivo para escribir.\n");
-        printf("Para registrar nuevas muestras use la opcion 2.\n");
+        printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         fclose(temporal);
         remove("temp.csv"); //Si no se puede abrir uno de estos archivos se borra el temporal
         return;
@@ -336,6 +295,7 @@ void buscarMuestra(const char *texto)
     if (archivo == NULL)
     {
         printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         return;
     }
 
@@ -352,7 +312,7 @@ void buscarMuestra(const char *texto)
         if (strcmp(datos[i].nombre, texto) == 0)
         {
             printf("\nMuestra:\n");
-            printf("%d. Nombre: %s, Inercia: %f\n", i+1, datos[i].nombre, datos[i].calorE);
+            printf("%d. Nombre: %s.  Calor especifico: %f\n", i+1, datos[i].nombre, datos[i].calorE);
             r = 1; //Usado para ver si se llevo el proceso con exito
         }
 
@@ -362,7 +322,7 @@ void buscarMuestra(const char *texto)
     //Mostrar que se hizo
     if(r == 0)
     {
-        printf("No se encontro ninguna muestra con este nombre.\n");
+        printf("\nNo se encontro ninguna muestra con este nombre.\n");
         printf("Para consultar las muestras disponibles usa la opcion 1.\n");
     }
 }
@@ -378,7 +338,8 @@ float buscarCalor(int numero)
     FILE *archivo = fopen("curvas.csv", "r");//Abrir archivo principal en modo lectura
     if (archivo == NULL)
     {
-        printf("No se pudo abrir el archivo para escribir.\n");
+        printf("No se pudo abrir el archivo.\n");
+        printf("Consulte el manual de usuario.\n");
         return 0;
     }
     

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "escritura.h" //Libreria para escribri a archivo csv
-#include "inercia.h" //Libreria con los calculos
+#include "potencia.h" //Libreria con los calculos
 
 int invalido(const char *s);
 int confirmacion();
@@ -45,7 +45,7 @@ int main()
             switch (opcionE) //Usada para cancelar o seguir
             {
             case 0:
-                printf("\nIngrese el nombre de la muestra a buscar: \n");
+                printf("\nIngrese el nombre de la muestra a buscar: ");
                 fgets(texto, sizeof(texto), stdin);//Obtiene el texto escrito
                 texto[strcspn(texto, "\n")] = '\0'; //Quita salto de linea
                 buscarMuestra(texto);
@@ -209,6 +209,7 @@ int main()
             switch (opcionE) //Usada para cancelar o seguir
             {
             case 0:
+                printf("\n");
                 mostrar();
                 printf("\n");
                 printf("Ingrese el numero de la muestra a calibrar: ");
